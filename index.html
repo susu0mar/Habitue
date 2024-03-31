@@ -18,9 +18,10 @@
 </header>
 
 <main>
+    <!-- NOT FUNCTIONAL, JUST PLACE HOLDER TO SEE HOW HABITS WOULD LOOK-->
     <section class="habit-list">
         <article class="habit">
-            <span class="habit-check">&#9744;</span>
+            <span class="habit-check">&#9744;</span> <!-- CHECK BOX DOESN'T WORK-->
             <div class="habit-info">Habit #1</div>
         </article>
         <article class="habit">
@@ -34,6 +35,38 @@
         <button class="filter-habit">Filter</button>
     </aside>
 </main>
+
+<!-- MODAL FOR HABIT CREATION -->
+<div id="addHabitModal" class="modal">
+    
+    <div class = "modal-content">
+        <span class ="close-button">&times;</span>
+        <h2> Add New Habit</h2>
+        <!-- Form to create a new habit -->
+        <form id = "addHabitForm">
+
+            <input type = "text" id = "habitName" name = "habitName" placeholder = "Habit Name" required>
+            <input type = "date" id= "dueDate" name = "dueDate" min = "2024-04-01" required> <!-- Might make due data an optional thing-->
+
+            <!-- Repeat Cycle (Might make this optional question too)-->
+            <select id="repeatCycle" name = "repeatCycle">
+                <option value = "daily"> Daily </option>
+                <option value = "weekly">Weekly</option>
+                <option value = "monthly">Monthly</option>
+            </select>
+
+            <select id="priority" name = "priority">
+                <option value = "low">Low</option>
+                <option value = "medium">Medium</option>
+                <option value = "high">High</option>
+            </select>
+            <button type = "submit"> Submit Habit</button>
+
+
+        </form>
+
+    </div>
+</div>
 
 <footer>
     <!-- Footer content goes here -->
