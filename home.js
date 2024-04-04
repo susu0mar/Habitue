@@ -139,12 +139,20 @@ function toggleFilterDropdown() {
   document.getElementById("filterDropdown").classList.toggle("show");
 }
 
-// TODO: Function for actual filtering by due date
+// Function for actual filtering by due date
 function filterHabits(order) {
   console.log('Filtering habits:', order);
-  // TODO: add the logic to sort the habits by due date in the specified order
-  if (order == "ascending"){
+  
+  if (order === 'ascending'){
+
+    habitArray.sort((a, b) => new Date(a.dueDate) - new Date(b.dueDate));
 
   }
+  else if(order ==='descending'){
+
+    habitArray.sort((a, b) => new Date(b.dueDate) - new Date(a.dueDate));
+
+  }
+  updateHabitDisplay();
 }
 
