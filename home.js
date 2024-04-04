@@ -254,29 +254,19 @@ function toggleFilterDropdown() {
 }
 
 // Function for actual filtering by due date
-  async function filterHabits(order) {
+function filterHabits(order) {
   console.log('Filtering habits:', order);
+  
+  if (order === 'ascending'){
 
-  const userId = sessionStorage.getItem('userId');
-  if (!userId) {
-    alert("User ID is not available. Please log in.");
-    return;
+    habitArray.sort((a, b) => new Date(a.dueDate) - new Date(b.dueDate));
+
   }
+  else if(order ==='descending'){
 
-  try {
-    const response = await fetch(`http://localhost:5000/api/users/${userId}/habits?sort=${order}`);
-    if (!response.ok) {
-      throw new Error('Failed to fetch sorted habits');
-    }
-    const sortedHabits = await response.json();
-    habitArray = sortedHabits; // Update local habit array with the sorted data
+    habitArray.sort((a, b) => new Date(b.dueDate) - new Date(a.dueDate));
 
-    allowDisplayUpdate = false //make sure it doesn't reload the page (which would reset the filter)
-    displayHabitsfromArray(habitArray);
-    allowDisplayUpdate = true //set it back to true MIGHT DELETE IDK
-  } catch (error) {
-    console.error('Error fetching sorted habits:', error);
-    alert('Failed to load sorted habits. Please try again.');
   }
+  updateHabitDisplay();
 }
 
