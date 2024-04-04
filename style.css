@@ -149,4 +149,53 @@ body, html {
   .habit-details {
     font-size: 0.8em; 
   }
+
+/*for account dropdown*/
+  /* Style The Dropdown Button */
+.dropbtn {
+  background-color: #fff0f0;
+  color: #333;
+  padding: 16px;
+  font-size: 16px;
+  border: none;
+  cursor: pointer;
+}
+
+/* The Container <div> - Needed To Position The Dropdown Content */
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+/* Dropdown Content (Hidden By Default) */
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #f9f9f9;
+  min-width: 160px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 1;
+}
+
+/* Links Inside The Dropdown */
+.dropdown-content a {
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+  font-weight: bold;
+}
+
+/* Change Color Of Dropdown Links On Hover */
+.dropdown-content a:hover {background-color: #f1f1f1}
+
+/* Show The Dropdown Menu On Hover */
+.dropdown:hover .dropdown-content {
+  display: block;
+}
+
+/* Change The Background Color Of The Dropdown Button When The Dropdown Content Is Shown */
+.dropdown:hover .dropbtn {
+  background-color: #e7e7e7;
+}
   
