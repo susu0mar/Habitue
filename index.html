@@ -27,7 +27,16 @@
 
     <aside class="sidebar">
         <button class="add-habit">+ Add Habit</button>
-        <button class="filter-habit">Filter</button>
+        <!---<button class="filter-habit">Filter</button> -->
+        <!--Filter button and Drop-Down-->
+        <div class="filter-container">
+            <button class="filter-habit" onclick = "toggleFilterDropdown()">Filter</button>
+            <div id ="filterDropdown" class = "dropdown-content">
+                <a href="#" onclick="filterHabits('ascending')">Ascending</a>
+                <a href="#" onclick="filterHabits('descending')">Descending</a>
+            </div>
+        </div>
+
     </aside>
 </main>
 
@@ -64,7 +73,7 @@
 </div>
 
 <footer>
-    <!-- Footer content goes here -->
+    <!-- Footer content goes here (maybe add "company name") -->
 </footer>
 
 <script src="home.js"></script>
