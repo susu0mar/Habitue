@@ -1,25 +1,27 @@
+<!---Page to display all user habit statistics-->
+<!---Maybe Weekly Statistics & total completion-->
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Habitue - Login</title>
+<title>Habitue - Home</title>
 <link rel="stylesheet" href="style.css">
 
 <!--fonts-->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Tilt+Neon&display=swap" rel="stylesheet">
-
 </head>
 
 <body>
 <header class="navbar">
-    <div class="logo"><img src = "Habitue_transparent.png" width = "100" height = "100"></div>
+    <div class="logo"><img src = "Habitue_transparent.png" width = "100" height = "100" alt = "Habitue Logo"></div>
     <nav>
-        <a href="#" class="active">Your Habits</a>
-        <a href="#">Habit Statistics</a>
-        <a href="#">Manage Habits</a>
+        <a href="index.html" >Your Habits</a>
+        <a href="habitStatistics.html"class="active">Habit Statistics</a>
+        <a href="manage_habits.html">Manage Habits</a>
         <div class = "dropdown">
             <button class = "dropbtn"> Account </button>
             <div class = "dropdown-content">
@@ -30,18 +32,23 @@
     </nav>
 </header>
 
-<div class="container">
-  <h2>Login to Habitue</h2>
+<main>
+    <!-- Chart container -->
+    <div class="chart-container" style="position: relative; height:40vh; width:80vw;">
+        <canvas id="weeklyStatsChart"></canvas>
+    </div>
 
-  <!-- Update action to your server endpoint -->
-  <form id = "loginForm">
-    <input type="text" id="username" name="username" placeholder="Username" required>
-    <input type="password" id="password" name="password" placeholder="Password" required>
-    <button type="submit">Login</button>
-  </form>
-  <a href="index.html" class="back-link">Back to Homepage</a>
-</div>
+</main>
 
-<script src = "loginAcct.js" > </script>
+</body>
+<footer>
+    &copy; 2024 SYDL
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script> <!--Using Chart.js-->
+<script src="habitStat.js"></script>
 </body>
 </html>
+
+
+

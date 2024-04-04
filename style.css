@@ -249,6 +249,15 @@ body, html {
 }
 
 
+/*Design for chart container in habit stats*/
+.chart-container {
+  width: 80%; 
+  margin: auto; /* Center the chart */
+  padding-top: 50px; /* Space from the navbar */
+}
+
+
+
 /* Responsive Design for Multiple Devices or Screensizes!! */
 
 /* Typical Tablet Screen*/
@@ -301,3 +310,11 @@ body, html {
    }
 }
   
+/* If habit-check button is checked, display a checkmark */
+.habit-check.checked {
+  /* Ensures the checkmark is centered within the square */
+  background-image: url('checkmark.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center left;
+}
