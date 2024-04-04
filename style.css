@@ -160,7 +160,17 @@ body, html {
     box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1);
   }
 
-  /* Dropdown Styling */
+  .habit-details {
+    font-size: 0.8em; 
+  }
+
+  /*dropdown menu editing*/
+  .filter-container{
+    position: relative;
+    display: inline-block;
+  }
+
+  /*Dropdown content (making it hidden by default)*/
   .dropdown-content{
     display: none;
     position: absolute;
@@ -189,7 +199,7 @@ body, html {
     
   }
 
-  /* Dropdown Button Styling */
+  /* Style The Dropdown Button */
 .dropbtn {
   background-color: #fff0f0;
   color: #333;
@@ -199,12 +209,13 @@ body, html {
   cursor: pointer;
 }
 
-/* Dropdown Content Styling */
+/* The Container <div> - Needed To Position The Dropdown Content */
 .dropdown {
   position: relative;
   display: inline-block;
 }
 
+/* Dropdown Content (Hidden By Default) */
 .dropdown-content {
   display: none;
   position: absolute;
@@ -214,6 +225,7 @@ body, html {
   z-index: 1;
 }
 
+/* Links Inside The Dropdown */
 .dropdown-content a {
   color: black;
   padding: 12px 16px;
@@ -222,99 +234,16 @@ body, html {
   font-weight: bold;
 }
 
+/* Change Color Of Dropdown Links On Hover */
 .dropdown-content a:hover {background-color: #f1f1f1}
 
+/* Show The Dropdown Menu On Hover */
 .dropdown:hover .dropdown-content {
   display: block;
 }
 
+/* Change The Background Color Of The Dropdown Button When The Dropdown Content Is Shown */
 .dropdown:hover .dropbtn {
   background-color: #e7e7e7;
 }
-
-/* Photo Grid Styling for Welcome Splash Screen*/
-.photo-grid{
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 5px;
-  width: 90%;
-  margin: auto;
-}
-
-.photo-item img{
-  width: 100%;
-  height: auto;
-  border-radius: 8px;
-  object-fit: cover;
-}
-
-
-/*Design for chart container in habit stats*/
-.chart-container {
-  width: 80%; 
-  margin: auto; /* Center the chart */
-  padding-top: 50px; /* Space from the navbar */
-}
-
-
-
-/* Responsive Design for Multiple Devices or Screensizes!! */
-
-/* Typical Tablet Screen*/
-@media (max-width: 768px) {
- .navbar {
-  flex-direction: column;
-  align-items: flex-start;
- }
-
- .navbar .logo, .navbar nav a, .dropbtn {
-  font-size: 1rem;
-  padding: 0.5 rem;
-  margin: 0.25rem 0;
- }
-
- main {
-  flex-direction: column;
- }
-
- .habit-list {
-  width: 100%;
- }
-
- .modal-content {
-  width: 90%;
-  margin: 10% auto;
- }
- 
- .photo-grid {
-  grid-template-columns: repeat(3, 1fr);
-  gap: 10px;
- }
-}
-
-/* Typical Phone Screen */
-@media (max-width: 480px)
-{
-  .navbar {
-    padding: 0.25rem 0.5rem;
-  }
-
-  .navbar .logo, .navbar nav a, .dropbtn {
-    margin: 0.25rem;
-    padding: 0.25rem 0.5rem;
-  }
-
-  .photo-grid {
-    grid-template-columns: repeat(4, 1fr);
-    gap: 15px;
-   }
-}
   
-/* If habit-check button is checked, display a checkmark */
-.habit-check.checked {
-  /* Ensures the checkmark is centered within the square */
-  background-image: url('checkmark.png');
-  background-size: contain;
-  background-repeat: no-repeat;
-  background-position: center left;
-}
