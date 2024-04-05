@@ -230,6 +230,23 @@ body, html {
   background-color: #e7e7e7;
 }
 
+/* Photo Grid Styling for Welcome Splash Screen*/
+.photo-grid{
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 5px;
+  width: 90%;
+  margin: auto;
+}
+
+.photo-item img{
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+  object-fit: cover;
+}
+
+
 /* Responsive Design for Multiple Devices or Screensizes!! */
 
 /* Typical Tablet Screen*/
@@ -257,6 +274,11 @@ body, html {
   width: 90%;
   margin: 10% auto;
  }
+ 
+ .photo-grid {
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+ }
 }
 
 /* Typical Phone Screen */
@@ -270,5 +292,10 @@ body, html {
     margin: 0.25rem;
     padding: 0.25rem 0.5rem;
   }
+
+  .photo-grid {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 15px;
+   }
 }
   
