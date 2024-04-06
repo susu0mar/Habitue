@@ -173,6 +173,8 @@ body, html {
 
   }
 
+
+
   /*links inside the dropdown*/
   .dropdown-content a {
     color:black;
@@ -181,9 +183,10 @@ body, html {
     display: block;
   }
 
+  
   .show{
     
-    display: block;
+    display: block !important;
     
   }
 
