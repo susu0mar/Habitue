@@ -126,7 +126,6 @@ function createHabitElement(habitData ){ //habitData is an element from habitArr
 
   // Append habit details to habit element
   habitElement.appendChild(habitDetails);
-
   // This habitElement is now fully constructed and can be returned
   return habitElement;
 

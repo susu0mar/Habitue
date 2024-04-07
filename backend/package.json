@@ -1,0 +1,16 @@
+{
+  "name": "habitue-backend",
+  "version": "1.0.0",
+  "description": "Backend API interface for habitue database",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js"
+  },
+  "author": "Daniel Mahaney",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.19.2",
+    "mongodb": "6.5"
+  }
+}
