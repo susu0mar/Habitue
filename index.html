@@ -6,14 +6,27 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Habitue - Home</title>
 <link rel="stylesheet" href="style.css">
+
+<!--fonts-->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Tilt+Neon&display=swap" rel="stylesheet">
 </head>
+
 <body>
 <header class="navbar">
-    <div class="logo"><img src = "Habitue_transparent.png" width = "100" height = "100"></div>
+    <div class="logo"><img src = "Habitue_transparent.png" width = "100" height = "100" alt = "Habitue Logo"></div>
     <nav>
         <a href="#" class="active">Your Habits</a>
         <a href="#">Habit Statistics</a>
         <a href="#">Manage Habits</a>
+        <div class = "dropdown">
+            <button class = "dropbtn"> Account </button>
+            <div class = "dropdown-content">
+                <a href = "createAccount.html"> Create Account </a>
+                <a href = "login.html"> Login </a>
+            </div>
+        </div>
     </nav>
 </header>
 
@@ -27,7 +40,16 @@
 
     <aside class="sidebar">
         <button class="add-habit">+ Add Habit</button>
-        <button class="filter-habit">Filter</button>
+        <!---<button class="filter-habit">Filter</button> -->
+        <!--Filter button and Drop-Down-->
+        <div class="filter-container">
+            <button class="filter-habit" onclick = "toggleFilterDropdown()">Filter</button>
+            <div id ="filterDropdown" class = "dropdown-content">
+                <a href="#" onclick="filterHabits('ascending')">Ascending</a>
+                <a href="#" onclick="filterHabits('descending')">Descending</a>
+            </div>
+        </div>
+
     </aside>
 </main>
 
@@ -64,7 +86,7 @@
 </div>
 
 <footer>
-    <!-- Footer content goes here -->
+    &copy; 2024 SYDL
 </footer>
 
 <script src="home.js"></script>
