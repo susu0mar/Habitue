@@ -1,6 +1,5 @@
 const {MongoClient} = require('mongodb');
 const express = require('express');
-const cors = require('cors'); //Souad added this to allow front and back end to run on diff ports
 const bodyParser = require('body-parser');
 
 const uri = "mongodb+srv://habitue-dev.mytvaae.mongodb.net/?authSource=%24external&authMechanism=MONGODB-X509&retryWrites=true&w=majority&appName=Habitue-dev";
@@ -11,9 +10,6 @@ const app = express();
 app.use(bodyParser.json());
 const client = new MongoClient(uri, {useUnifiedTopology: true, tls: true, tlsCertificateKeyFile: './certificates/X509-apicert.pem'});
 
- app.use(cors({
-     origin : 'http://localhost:8080'
- }));
 
 
 /**
