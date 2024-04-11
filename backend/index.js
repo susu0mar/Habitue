@@ -93,8 +93,8 @@ app.delete('/api/users/:id', async (req, res) => {
  * Authentication API endpoints
  */
 app.post('/api/login', async (req, res) => {
-    const {email, password} = req.body;
-    const user = await client.db('habitue').collection('users').findOne({email, password});
+    const {username, password} = req.body;
+    const user = await client.db('habitue').collection('users').findOne({username, password});
     res.send(user);
 });
 
