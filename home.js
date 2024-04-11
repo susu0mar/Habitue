@@ -28,7 +28,7 @@ span.onclick = function() {
   form.reset(); //clear the form after user clicks x
 }
 
-//MIGHT DELETE THIS ONE IDK
+
 // When the user clicks anywhere outside of the modal, close it
 window.onclick = function(event) {
   if (event.target == modal) {
