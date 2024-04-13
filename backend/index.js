@@ -1,5 +1,6 @@
 const {MongoClient} = require('mongodb');
 const express = require('express');
+const cors = require('cors'); //Souad added this to allow front and back end to run on diff ports
 const bodyParser = require('body-parser');
 
 const uri = "mongodb+srv://habitue-dev.mytvaae.mongodb.net/?authSource=%24external&authMechanism=MONGODB-X509&retryWrites=true&w=majority&appName=Habitue-dev";
@@ -10,6 +11,9 @@ const app = express();
 app.use(bodyParser.json());
 const client = new MongoClient(uri, {useUnifiedTopology: true, tls: true, tlsCertificateKeyFile: './certificates/X509-apicert.pem'});
 
+ app.use(cors({
+     origin : 'http://localhost:8080'
+ }));
 
 
 /**
@@ -89,8 +93,8 @@ app.delete('/api/users/:id', async (req, res) => {
  * Authentication API endpoints
  */
 app.post('/api/login', async (req, res) => {
-    const {email, password} = req.body;
-    const user = await client.db('habitue').collection('users').findOne({email, password});
+    const {username, password} = req.body;
+    const user = await client.db('habitue').collection('users').findOne({username, password});
     res.send(user);
 });
 
@@ -134,13 +138,27 @@ app.delete('/api/habits/:id', async (req, res) => {
 /**
  *  User Habit endpoints 
  */
-app.get('/api/users/:id/habits', async (req, res) => {
-    const user = await client.db('habitue').collection('users').findOne({id: req.params.id});
-    var habits = [];
-    for (let i = 0; i < user.habits.length; i++) {
-        user.habits[i] = await client.db('habitue').collection('habits').findOne({id: user.habits[i]});
+app.get('/api/users/:id/habits', async (req, res) => { //also handles sorting by due date!
+    const userId = req.params.id;
+    const sort = {};
+
+    // Check for sort query parameter and prepare the sort object
+    if (req.query.sort === 'ascending') {
+        sort.dueDate = 1; // MongoDB sort ascending
+    } else if (req.query.sort === 'descending') {
+        sort.dueDate = -1; // MongoDB sort descending
     }
-    res.send(habits);
+
+    try {
+        const habits = await client.db('habitue').collection('habits')
+                              .find({ userId: userId })
+                              .sort(sort) // Apply sorting based on the query parameter *its optional
+                              .toArray();
+        res.send(habits);
+    } catch (error) {
+        console.error('Failed to fetch habits:', error);
+        res.status(500).send('Error fetching habits');
+    }
 });
 
 app.put('/api/users/:id/habits', async (req, res) => {
