@@ -40,8 +40,17 @@ async function registerUser(user){
         const registeredUser = await response.json();
         console.log('User registered:', registeredUser);
 
-        // Redirect or update UI upon successful registration
-        window.location.href = '/index.html'; //redirect to the homepage
+        //get user id **important for loading/storing user habits
+        if(registeredUser._id){
+            //USING SESSIONSTORAGE TO KEEP TRACK OF USERID **IMPORTANT FOR RETRIEVING AND STORING USER HABITS (BY ID)
+            //didnt want to deal with tokens or anything so using userid
+            sessionStorage.setItem('userId', registeredUser._id);
+
+            // Redirect or update UI upon successful registration
+            window.location.href = '/index.html'; //redirect to the homepage
+        }
+
+
     } catch (error) {
         console.error('Error:', error);
         

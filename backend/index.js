@@ -138,13 +138,27 @@ app.delete('/api/habits/:id', async (req, res) => {
 /**
  *  User Habit endpoints 
  */
-app.get('/api/users/:id/habits', async (req, res) => {
-    const user = await client.db('habitue').collection('users').findOne({id: req.params.id});
-    var habits = [];
-    for (let i = 0; i < user.habits.length; i++) {
-        user.habits[i] = await client.db('habitue').collection('habits').findOne({id: user.habits[i]});
+app.get('/api/users/:id/habits', async (req, res) => { //also handles sorting by due date!
+    const userId = req.params.id;
+    const sort = {};
+
+    // Check for sort query parameter and prepare the sort object
+    if (req.query.sort === 'ascending') {
+        sort.dueDate = 1; // MongoDB sort ascending
+    } else if (req.query.sort === 'descending') {
+        sort.dueDate = -1; // MongoDB sort descending
     }
-    res.send(habits);
+
+    try {
+        const habits = await client.db('habitue').collection('habits')
+                              .find({ userId: userId })
+                              .sort(sort) // Apply sorting based on the query parameter *its optional
+                              .toArray();
+        res.send(habits);
+    } catch (error) {
+        console.error('Failed to fetch habits:', error);
+        res.status(500).send('Error fetching habits');
+    }
 });
 
 app.put('/api/users/:id/habits', async (req, res) => {
