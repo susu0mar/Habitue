@@ -180,14 +180,17 @@ async function updateHabitDisplay(){
   // var habitList = document.querySelector('.habit-list')
   // habitList.innerHTML = '' //clear inner html elements on display
 
-  // // Add each habit in the array back to the display
-  // habitArray.forEach(habit => {
-  //   if (!habit.element) {
-  //     habit.element = createHabitElement(habit);
-  //   }
-  //   habitList.appendChild(habit.element);
-  // });
+  // Get all habit-check buttons after they have been added to the DOM
+  var habitCheckButtons = document.querySelectorAll('.habit-check');
 
+  // Add event listeners to habit-check buttons
+  habitCheckButtons.forEach(function (button) {
+    // Toggle 'checked' if the button is clicked
+    // If the button is already 'checked' and clicked again, then its not 'checked' 
+    button.addEventListener('click', function () {
+      button.classList.toggle('checked');
+    });
+  });
 }
 
 function displayHabitsfromArray(habits) {
