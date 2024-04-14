@@ -88,15 +88,35 @@ app.delete('/api/users/:id', async (req, res) => {
 
 /**
  * Authentication API endpoints
- */
+*/
 app.post('/api/login', async (req, res) => {
-    const {email, password} = req.body;
-    const user = await client.db('habitue').collection('users').findOne({email, password});
+    const {username, password} = req.body;
+    if (!username || !password) {
+        res.status(400).send('Username and password are required');
+        return;
+    }
+    const user = await client.db('habitue').collection('users').findOne({username, password});
     res.send(user);
 });
 
 app.post('/api/register', async (req, res) => {
     const user = req.body;
+    if (!user.username || !user.password) {
+        res.status(400).send('Username and password are required');
+        return;
+    }
+    if (!user.email) {
+        user.email = '';
+    }
+    if (!user.name) {
+        user.name = '';
+    }
+    if (!user.habits) {
+        user.habits = [];
+    }
+    if (!user.notifications) {
+        user.notifications = [];
+    }
     await client.db('habitue').collection('users').insertOne(user);
     res.send(user);
 });
@@ -138,6 +158,10 @@ app.delete('/api/habits/:id', async (req, res) => {
 app.get('/api/users/:id/habits', async (req, res) => {
     const user = await client.db('habitue').collection('users').findOne({id: req.params.id});
     var habits = [];
+    if (user.habits === undefined || user.habits.length === 0) {
+        res.send(habits);
+        return;
+    }
     for (let i = 0; i < user.habits.length; i++) {
         user.habits[i] = await client.db('habitue').collection('habits').findOne({id: user.habits[i]});
     }
@@ -190,14 +214,62 @@ app.put('/api/habits/:id/completed', async (req, res) => {
     res.send(habit);
 });
 
-app.get('*', (req, res) => {
-    let filepath = req.url;
-    try {
-        console.log(__dirname + "/.." + filepath);
-        res.sendFile(path.join(__dirname, "/..",filepath));
-    }
-    catch (err) {
-        res.status(404).send('404 Not Found');
-        console.log(err)
-    }
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, '../', 'index.html'));
 })
+
+app.get('/index.html', (req, res) => {
+    res.sendFile(path.join(__dirname, '../', 'index.html'));
+})
+
+app.get('/home.js', (req, res) => {
+    res.sendFile(path.join(__dirname, '../', 'home.js'));
+});
+
+app.get('/login.html', (req, res) => {
+    res.sendFile(path.join(__dirname, '../', 'login.html'))
+});
+
+app.get('/loginAcct.js', (req, res) => {
+    res.sendFile(path.join(__dirname, '../', 'loginAcct.js'))
+});
+
+app.get('/createAccount.html', (req, res) => {
+    res.sendFile(path.join(__dirname, '../', 'createAccount.html'))
+});
+
+app.get('/createAcct.js', (req, res) => {
+    res.sendFile(path.join(__dirname, '../', 'createAcct.js'))
+});
+
+app.get('/habitStatistics.html', (req, res) => {
+    res.sendFile(path.join(__dirname, '../', 'habitStatistics.html'))
+});
+
+app.get('/habitStat.js', (req, res) => {
+    res.sendFile(path.join(__dirname, '../', 'habitStat.js'))
+});
+
+app.get('/manage_habits.html', (req, res) => {
+    res.sendFile(path.join(__dirname, '../', 'manage_habits.html'))
+});
+
+app.get('/welcomespalsh.html', (req, res) => {
+    res.sendFile(path.join(__dirname, '../', 'welcomesplash.html'))
+});
+
+app.get('/style.css', (req, res) => {
+    res.sendFile(path.join(__dirname, '../', 'style.css'))
+});
+
+app.get('/Habitue_tmp_logo.png', (req, res) => {
+    res.sendFile(path.join(__dirname, '../', 'Habitue_tmp_logo.png'))
+});
+
+app.get('/Habitue_transparent.png', (req, res) => {
+    res.sendFile(path.join(__dirname, '../', 'Habitue_transparent.png'))
+});
+
+app.get('/favicon.ico', (req, res) => {
+    res.sendFile(path.join(__dirname, '../', 'favicon.ico'))
+});

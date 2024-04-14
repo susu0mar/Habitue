@@ -120,7 +120,7 @@ async function addHabitDB(habitName, dueDate, priority, repeatCycle){
 async function sendHabitToBackend(habitData){
 
   try {
-    const response = await fetch('http://localhost:5000/api/habits', {
+    const response = await fetch('/api/habits', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -156,7 +156,7 @@ async function updateHabitDisplay(){
 
     try {
         console.log("getting habits to update display")
-        const response = await fetch(`http://localhost:5000/api/users/${userId}/habits`, {headers:{'Cache-Control': 'no-cache'}});
+        const response = await fetch(`/api/users/${userId}/habits`, {headers:{'Cache-Control': 'no-cache'}});
         if (!response.ok) {
             throw new Error('Failed to fetch habits');
         }
