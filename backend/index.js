@@ -1,10 +1,11 @@
 const {MongoClient} = require('mongodb');
 const express = require('express');
 const bodyParser = require('body-parser');
+const path = require('path');
 
 const uri = "mongodb+srv://habitue-dev.mytvaae.mongodb.net/?authSource=%24external&authMechanism=MONGODB-X509&retryWrites=true&w=majority&appName=Habitue-dev";
 
-const api_port = 5000;
+const api_port = 8080;
 
 const app = express();
 app.use(bodyParser.json());
@@ -188,3 +189,15 @@ app.put('/api/habits/:id/completed', async (req, res) => {
     await client.db('habitue').collection('habits').updateOne({id: req.params.id}, {$set: habit});
     res.send(habit);
 });
+
+app.get('*', (req, res) => {
+    let filepath = req.url;
+    try {
+        console.log(__dirname + "/.." + filepath);
+        res.sendFile(path.join(__dirname, "/..",filepath));
+    }
+    catch (err) {
+        res.status(404).send('404 Not Found');
+        console.log(err)
+    }
+})
