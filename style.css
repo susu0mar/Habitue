@@ -249,6 +249,15 @@ body, html {
 }
 
 
+/*Design for chart container in habit stats*/
+.chart-container {
+  width: 80%; 
+  margin: auto; /* Center the chart */
+  padding-top: 50px; /* Space from the navbar */
+}
+
+
+
 /* Responsive Design for Multiple Devices or Screensizes!! */
 
 /* Typical Tablet Screen*/
