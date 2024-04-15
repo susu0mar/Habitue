@@ -1,5 +1,11 @@
 # Habitue
 
-# to run front end
-need to install http-server (or not? I use npx http-server to open the html/frontend)
-need to install cors
+# To Deploy
+
+## Dev Container
+1. Install Docker
+2. Install Visual Studio Code
+3. Install Remote - Containers extension
+4. Open the project in Visual Studio Code
+5. Click on the green icon in the bottom left corner and select `Reopen in Container`
+6. Run `cd backend && npm start` in the terminal

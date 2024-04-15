@@ -9,7 +9,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         try {
             console.log("Debug: Try block entered");
-            const response = await fetch('http://localhost:5000/api/login', {
+            const response = await fetch('/api/login', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
