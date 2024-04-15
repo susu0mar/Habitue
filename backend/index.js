@@ -240,7 +240,7 @@ app.put('/api/habits/:id/completed', async (req, res) => {
 });
 
 app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, '../', 'index.html'));
+    res.sendFile(path.join(__dirname, '../', 'welcomesplash.html'));
 })
 
 app.get('/index.html', (req, res) => {
