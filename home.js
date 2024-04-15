@@ -1,5 +1,4 @@
-
-//TODO: NEED TO FIGURE OUT CHECKING OFF HABITS/COMPLETEION
+// Javascript file for home page - adding, viewing, and checking off habits
 //SCRIPT TO OPEN & CLOSE ADD HABIT MODAL 
 
 // Get the modal
@@ -112,15 +111,12 @@ async function addHabitDB(habitName, dueDate, priority, repeatCycle){
     console.error('Failed to add the habit to the database :(');
   }
  
-
-
-
 }
 
 async function sendHabitToBackend(habitData){
 
   try {
-    const response = await fetch('/api/habits', {
+    const response = await fetch('http://localhost:5000/api/habits', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -156,7 +152,7 @@ async function updateHabitDisplay(){
 
     try {
         console.log("getting habits to update display")
-        const response = await fetch(`/api/users/${userId}/habits`, {headers:{'Cache-Control': 'no-cache'}});
+        const response = await fetch(`http://localhost:5000/api/users/${userId}/habits`, {headers:{'Cache-Control': 'no-cache'}});
         if (!response.ok) {
             throw new Error('Failed to fetch habits');
         }
@@ -187,11 +183,31 @@ async function updateHabitDisplay(){
   habitCheckButtons.forEach(function (button) {
     // Toggle 'checked' if the button is clicked
     // If the button is already 'checked' and clicked again, then its not 'checked' 
-    button.addEventListener('click', function () {
+    button.addEventListener('click', async function () {
       button.classList.toggle('checked');
+      const habitId = button.parentElement.dataset.habitId;
+      const completed = button.classList.contains('checked');
+
+      try {
+        // Send a PUT request to update habit completion status
+        const response = await fetch(`http://localhost:5000/api/users/${userId}/habits/${habitId}/completed`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ completed }) 
+        });
+        
+        if (!response.ok) {
+            throw new Error('Failed to update habit completion status');
+        }
+
+    } catch (error) {
+        console.error('Error updating habit completion status:', error);
+    }
       
       // Play confetti animation if the habit is checked off
-      if (button.classList.contains('checked')) {
+      if (completed) {
         confettiAnimation();
     }
     });
@@ -248,8 +264,6 @@ function createHabitElement(habitData ){ //habitData is from database
   habitElement.appendChild(habitDetails);
   // This habitElement is now fully constructed and can be returned
   return habitElement;
-
-
 }
 
 //***FUNCTIONS FOR FILTERING HABITS***
@@ -259,21 +273,32 @@ function toggleFilterDropdown() {
 }
 
 // Function for actual filtering by due date
-function filterHabits(order) {
+  async function filterHabits(order) {
   console.log('Filtering habits:', order);
-  
-  if (order === 'ascending'){
 
-    habitArray.sort((a, b) => new Date(a.dueDate) - new Date(b.dueDate));
-
+  const userId = sessionStorage.getItem('userId');
+  if (!userId) {
+    alert("User ID is not available. Please log in.");
+    return;
   }
-  else if(order ==='descending'){
 
-    habitArray.sort((a, b) => new Date(b.dueDate) - new Date(a.dueDate));
+  try {
+    const response = await fetch(`http://localhost:5000/api/users/${userId}/habits?sort=${order}`);
+    if (!response.ok) {
+      throw new Error('Failed to fetch sorted habits');
+    }
+    const sortedHabits = await response.json();
+    habitArray = sortedHabits; // Update local habit array with the sorted data
 
+    allowDisplayUpdate = false //make sure it doesn't reload the page (which would reset the filter)
+    displayHabitsfromArray(habitArray);
+    allowDisplayUpdate = true //set it back to true MIGHT DELETE IDK
+  } catch (error) {
+    console.error('Error fetching sorted habits:', error);
+    alert('Failed to load sorted habits. Please try again.');
   }
-  updateHabitDisplay();
 }
+
 
 // Confetti animation code from Codepen.io 
 function confettiAnimation() {
