@@ -48,6 +48,11 @@ document.addEventListener('DOMContentLoaded', function() {
   updateHabitDisplay();}
 });
 
+// Load user habits when 'manage habits' tab is clicked
+document.getElementById('manageHabitsPage').addEventListener('click', function(event) {
+  updateHabitDisplay();
+});
+
 document.getElementById('addHabitForm').onsubmit = function(event) {
   // Get the values of all form fields
   var habitName = document.getElementById('habitName').value;
@@ -184,11 +189,31 @@ async function updateHabitDisplay(){
   habitCheckButtons.forEach(function (button) {
     // Toggle 'checked' if the button is clicked
     // If the button is already 'checked' and clicked again, then its not 'checked' 
-    button.addEventListener('click', function () {
+    button.addEventListener('click', async function () {
       button.classList.toggle('checked');
+      const habitId = button.parentElement.dataset.habitId;
+      const completed = button.classList.contains('checked');
+
+      try {
+        // Send a PUT request to update habit completion status
+        const response = await fetch(`http://localhost:5000/api/habits/${habitId}/completed`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ completed }) 
+        });
+        
+        if (!response.ok) {
+            throw new Error('Failed to update habit completion status');
+        }
+
+    } catch (error) {
+        console.error('Error updating habit completion status:', error);
+    }
       
       // Play confetti animation if the habit is checked off
-      if (button.classList.contains('checked')) {
+      if (completed) {
         confettiAnimation();
     }
     });
@@ -247,7 +272,22 @@ function createHabitElement(habitData ){ //habitData is from database
     trashIcon.className = 'trash-icon';
     trashIcon.innerHTML = '🗑️'; 
     habitElement.appendChild(trashIcon);
-  }
+
+    // Add event listener for this specific trash icon
+    trashIcon.addEventListener('click', function(event) {
+      // Get the habit name for the habit that needs to be deleted
+      const habitElement = event.target.parentElement; 
+      const habitName = habitElement.querySelector('.habit-name').textContent; 
+
+      // Display confirmation popup
+      const isConfirmed = confirm(`Are you sure you want to delete the habit "${habitName}"?`);
+
+      // If the user confirms deletion, remove the habit
+      if (isConfirmed) {
+        removeHabitDB(habitName);
+      }
+    });
+}
 
   // Append habit details to habit element
   habitElement.appendChild(habitDetails);
@@ -287,23 +327,6 @@ function toggleFilterDropdown() {
     alert('Failed to load sorted habits. Please try again.');
   }
 }
-
-// Add event listener for trash icon click
-document.addEventListener('click', function (event) {
-  if (event.target.classList.contains('trash-icon')) {
-    // Get the habit name for the habit that needs to be deleted
-    const habitElement = event.target.parentElement; 
-    const habitName = habitElement.querySelector('.habit-name').textContent; 
-
-    // Display confirmation popup
-    const isConfirmed = confirm(`Are you sure you want to delete the habit "${habitName}"?`);
-
-    // If the user confirms deletion, remove the habit
-    if (isConfirmed) {
-      removeHabitDB(habitName);
-    }
-  }
-});
 
 
 async function removeHabitDB(habitName) {
