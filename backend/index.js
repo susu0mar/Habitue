@@ -1,4 +1,4 @@
-const {MongoClient} = require('mongodb');
+const {MongoClient, ObjectId} = require('mongodb');
 const express = require('express');
 const bodyParser = require('body-parser');
 const path = require('path');
@@ -20,8 +20,10 @@ const client = new MongoClient(uri, {useUnifiedTopology: true, tls: true, tlsCer
  *      id: String,
  *      name: String,
  *      email: String,
+ *      username: String,
  *      password: String, # Hashed + Salted
  *      habits: [String] # Habit IDs
+ *      notifications: [String] # Notification IDs
  * }
  * 
  * Habit {
@@ -45,6 +47,22 @@ const client = new MongoClient(uri, {useUnifiedTopology: true, tls: true, tlsCer
  * 
  */
 
+function validateUser(user) {
+    if (!user.name)
+        user.name = '';
+    if (!user.email)
+        user.email = '';
+    if (!user.username)
+        throw 'Username is required';
+    if (!user.password)
+        throw 'Password is required';
+    if (!user.habits)
+        user.habits = [];
+    if (!user.notifications)
+        user.notifications = [];
+    return user;
+}
+
 
 client.connect().then(() => {
     app.listen(api_port, () => {
@@ -65,24 +83,36 @@ app.get('/api/users', async (req, res) => {
 });
 
 app.get('/api/users/:id', async (req, res) => {
-    const user = await client.db('habitue').collection('users').findOne({id: req.params.id});
+    const user = await client.db('habitue').collection('users').findOne({"_id": new ObjectId(req.params.id)});
     res.send(user);
 });
 
 app.post('/api/users', async (req, res) => {
-    const user = req.body;
+    var user = req.body;
+    try {
+        user = validateUser(user);
+    } catch (e) {
+        res.status(400).send(e);
+        return;
+    }
     await client.db('habitue').collection('users').insertOne(user);
     res.send(user);
 });
 
 app.put('/api/users/:id', async (req, res) => {
     const user = req.body;
-    await client.db('habitue').collection('users').updateOne({id: req.params.id}, {$set: user});
+    try {
+        user = validateUser(user);
+    } catch (e) {
+        res.status(400).send(e);
+        return;
+    }
+    await client.db('habitue').collection('users').updateOne({"_id": new ObjectId(req.params.id)}, {$set: user});
     res.send(user);
 });
 
 app.delete('/api/users/:id', async (req, res) => {
-    await client.db('habitue').collection('users').deleteOne({id: req.params.id});
+    await client.db('habitue').collection('users').deleteOne({"_id": new ObjectId(req.params.id)});
     res.send('User deleted');
 });
 
@@ -100,22 +130,12 @@ app.post('/api/login', async (req, res) => {
 });
 
 app.post('/api/register', async (req, res) => {
-    const user = req.body;
-    if (!user.username || !user.password) {
-        res.status(400).send('Username and password are required');
+    var user = req.body;
+    try {
+        user = validateUser(user);
+    } catch (e) {
+        res.status(400).send(e);
         return;
-    }
-    if (!user.email) {
-        user.email = '';
-    }
-    if (!user.name) {
-        user.name = '';
-    }
-    if (!user.habits) {
-        user.habits = [];
-    }
-    if (!user.notifications) {
-        user.notifications = [];
     }
     await client.db('habitue').collection('users').insertOne(user);
     res.send(user);
@@ -131,7 +151,7 @@ app.get('/api/habits', async (req, res) => {
 });
 
 app.get('/api/habits/:id', async (req, res) => {
-    const habit = await client.db('habitue').collection('habits').findOne({id: req.params.id});
+    const habit = await client.db('habitue').collection('habits').findOne({"_id": new ObjectId(req.params.id)});
     res.send(habit);
 });
 
@@ -143,12 +163,12 @@ app.post('/api/habits', async (req, res) => {
 
 app.put('/api/habits/:id', async (req, res) => {
     const habit = req.body;
-    await client.db('habitue').collection('habits').updateOne({id: req.params.id}, {$set: habit});
+    await client.db('habitue').collection('habits').updateOne({"_id": new ObjectId(req.params.id)}, {$set: habit});
     res.send(habit);
 });
 
 app.delete('/api/habits/:id', async (req, res) => {
-    await client.db('habitue').collection('habits').deleteOne({id: req.params.id});
+    await client.db('habitue').collection('habits').deleteOne({"_id": new ObjectId(req.params.id)});
     res.send('Habit deleted');
 });
 
@@ -156,29 +176,34 @@ app.delete('/api/habits/:id', async (req, res) => {
  *  User Habit endpoints 
  */
 app.get('/api/users/:id/habits', async (req, res) => {
-    const user = await client.db('habitue').collection('users').findOne({id: req.params.id});
+    const user = await client.db('habitue').collection('users').findOne({"_id": new ObjectId(req.params.id)});
+    if (!user) {
+        res.status(404).send('User not found');
+        return;
+    }
     var habits = [];
-    if (user.habits === undefined || user.habits.length === 0) {
+    if (!user.habits) {
+        console.log('No habits found')
         res.send(habits);
         return;
     }
     for (let i = 0; i < user.habits.length; i++) {
-        user.habits[i] = await client.db('habitue').collection('habits').findOne({id: user.habits[i]});
+        habits[i] = await client.db('habitue').collection('habits').findOne({"_id": new ObjectId(user.habits[i])});
     }
     res.send(habits);
 });
 
 app.put('/api/users/:id/habits', async (req, res) => {
-    const user = await client.db('habitue').collection('users').findOne({id: req.params.id});
+    const user = await client.db('habitue').collection('users').findOne({"_id": new ObjectId(req.params.id)});
     user.habits.push(req.body.id);
-    await client.db('habitue').collection('users').updateOne({id: req.params.id}, {$set: user});
+    await client.db('habitue').collection('users').updateOne({"_id": new ObjectId(req.params.id)}, {$set: user});
     res.send(user);
 });
 
 app.delete('/api/users/:id/habits/:habitId', async (req, res) => {
-    const user = await client.db('habitue').collection('users').findOne({id: req.params.id});
+    const user = await client.db('habitue').collection('users').findOne({"_id": new ObjectId(req.params.id)});
     user.habits = user.habits.filter(habit => habit !== req.params.habitId);
-    await client.db('habitue').collection('users').updateOne({id: req.params.id}, {$set: user});
+    await client.db('habitue').collection('users').updateOne({"_id": new ObjectId(req.params.id)}, {$set: user});
     res.send(user);
 });
 
@@ -187,14 +212,14 @@ app.delete('/api/users/:id/habits/:habitId', async (req, res) => {
  */
 
 app.get('/api/habits/:id/dueDate', async (req, res) => {
-    const habit = await client.db('habitue').collection('habits').findOne({id: req.params.id});
+    const habit = await client.db('habitue').collection('habits').findOne({"_id": new ObjectId(req.params.id)});
     res.send(habit.dueDate);
 });
 
 app.put('/api/habits/:id/dueDate', async (req, res) => {
-    const habit = await client.db('habitue').collection('habits').findOne({id: req.params.id});
+    const habit = await client.db('habitue').collection('habits').findOne({"_id": new ObjectId(req.params.id)});
     habit.dueDate = req.body.dueDate;
-    await client.db('habitue').collection('habits').updateOne({id: req.params.id}, {$set: habit});
+    await client.db('habitue').collection('habits').updateOne({"_id": new ObjectId(req.params.id)}, {$set: habit});
     res.send(habit);
 });
 
@@ -203,14 +228,14 @@ app.put('/api/habits/:id/dueDate', async (req, res) => {
  */
 
 app.get('/api/habits/:id/completed', async (req, res) => {
-    const habit = await client.db('habitue').collection('habits').findOne({id: req.params.id});
+    const habit = await client.db('habitue').collection('habits').findOne({"_id": new ObjectId(req.params.id)});
     res.send(habit.completed);
 });
 
 app.put('/api/habits/:id/completed', async (req, res) => {
-    const habit = await client.db('habitue').collection('habits').findOne({id: req.params.id});
+    const habit = await client.db('habitue').collection('habits').findOne({"_id": new ObjectId(req.params.id)});
     habit.completed = req.body.completed;
-    await client.db('habitue').collection('habits').updateOne({id: req.params.id}, {$set: habit});
+    await client.db('habitue').collection('habits').updateOne({"_id": new ObjectId(req.params.id)}, {$set: habit});
     res.send(habit);
 });
 
