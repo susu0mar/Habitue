@@ -114,17 +114,31 @@ app.get('/api/users/:id', async (req, res) => {
     res.send(user);
 });
 
-app.post('/api/users', async (req, res) => {
-    var user = req.body;
+// app.post('/api/users', async (req, res) => {
+//     var user = req.body;
+//     try {
+//         user = validateUser(user);
+//     } catch (e) {
+//         res.status(400).send(e);
+//         return;
+//     }
+//     await client.db('habitue').collection('users').insertOne(user);
+//     res.send(user);
+// });
+
+app.post('/api/habits', async (req, res) => {
+    let habit = req.body;
     try {
-        user = validateUser(user);
+        habit = validateHabit(habit);
     } catch (e) {
-        res.status(400).send(e);
+        res.status(400).send(e.toString()); //convert Error to string if necessary
         return;
     }
-    await client.db('habitue').collection('users').insertOne(user);
-    res.send(user);
+    const insertResult = await client.db('habitue').collection('habits').insertOne(habit);
+    await client.db('habitue').collection('users').updateOne({"_id": new ObjectId(habit.userId)}, {$push: {habits: insertResult.insertedId}});
+    res.send(habit);
 });
+
 
 app.put('/api/users/:id', async (req, res) => {
     const user = req.body;
