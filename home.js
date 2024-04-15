@@ -1,5 +1,4 @@
-
-//TODO: NEED TO FIGURE OUT CHECKING OFF HABITS/COMPLETEION
+// Javascript file for home page - adding, viewing, and checking off habits
 //SCRIPT TO OPEN & CLOSE ADD HABIT MODAL 
 
 // Get the modal
@@ -46,11 +45,6 @@ window.onclick = function(event) {
 document.addEventListener('DOMContentLoaded', function() {
   if(allowDisplayUpdate){
   updateHabitDisplay();}
-});
-
-// Load user habits when 'manage habits' tab is clicked
-document.getElementById('manageHabitsPage').addEventListener('click', function(event) {
-  updateHabitDisplay();
 });
 
 document.getElementById('addHabitForm').onsubmit = function(event) {
@@ -196,7 +190,7 @@ async function updateHabitDisplay(){
 
       try {
         // Send a PUT request to update habit completion status
-        const response = await fetch(`http://localhost:5000/api/habits/${habitId}/completed`, {
+        const response = await fetch(`http://localhost:5000/api/users/${userId}/habits/${habitId}/completed`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json'
@@ -266,29 +260,6 @@ function createHabitElement(habitData ){ //habitData is from database
         habitDetails.appendChild(detailSpan);
     });
 
-  // If on the manage habits page, add trash bin icon for each habit
-  if (window.location.pathname === '/manage_habits.html') {
-    var trashIcon = document.createElement('span');
-    trashIcon.className = 'trash-icon';
-    trashIcon.innerHTML = '🗑️'; 
-    habitElement.appendChild(trashIcon);
-
-    // Add event listener for this specific trash icon
-    trashIcon.addEventListener('click', function(event) {
-      // Get the habit name for the habit that needs to be deleted
-      const habitElement = event.target.parentElement; 
-      const habitName = habitElement.querySelector('.habit-name').textContent; 
-
-      // Display confirmation popup
-      const isConfirmed = confirm(`Are you sure you want to delete the habit "${habitName}"?`);
-
-      // If the user confirms deletion, remove the habit
-      if (isConfirmed) {
-        removeHabitDB(habitName);
-      }
-    });
-}
-
   // Append habit details to habit element
   habitElement.appendChild(habitDetails);
   // This habitElement is now fully constructed and can be returned
@@ -328,28 +299,6 @@ function toggleFilterDropdown() {
   }
 }
 
-
-async function removeHabitDB(habitName) {
-  // Send request to server to delete habit from the database
-  const userId = sessionStorage.getItem('userId');
-  const response = await fetch(`http://localhost:5000/api/users/${userId}/habits?name=${habitName}`, {
-      method: 'DELETE'
-  });
-
-  if (response.ok) {
-      console.log(`Habit '${habitName}' removed from database`);
-
-      // Remove habit from the HTML display
-      const habitElements = document.querySelectorAll('.habit-list .habit-info');
-      habitElements.forEach(habitElement => {
-          if (habitElement.textContent === habitName) {
-              habitElement.parentElement.remove();
-          }
-      });
-  } else {
-      console.error('Error deleting habit from database');
-  }
-}
 
 // Confetti animation code from Codepen.io 
 function confettiAnimation() {
