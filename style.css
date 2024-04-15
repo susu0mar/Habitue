@@ -1,10 +1,11 @@
 /* Base Styling */
 body, html {
+    height: 100%;
     margin: 0;
     padding: 0;
     box-sizing: border-box;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: #f0ebeb;
+    background: #F6F4F4;
   }
   
 /* Navbar Styling */
@@ -13,27 +14,124 @@ body, html {
     align-items: center;
     justify-content: space-between;
     padding: 0.5rem 1rem;
-    background: #fff0f0;
+    background: #FDDAD8;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   }
   
   .navbar .logo {
     font-size: 1.5rem;
     font-weight: bold;
-    color: #333;
+    color: #0E1116;
   }
   
   .navbar nav a {
     text-decoration: none;
     margin-left: 1rem;
-    color: #333;
+    color: #0E1116;
+    font-weight: normal;
+  }
+  
+  .navbar nav a.active, .navbar nav a:hover {
     font-weight: bold;
+    color: #0E1116;
   }
   
-  .navbar nav a.active {
-    color: #000;
-  }
-  
+/* Create Account Styling */
+.account-container {
+  width: 90%;
+  max-width: 400px;
+  margin: 2rem auto;
+  padding: 2rem;
+  background: #FFFFFF;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  border-radius: 8px;
+  text-align: center;
+}
+
+.account-container h2 {
+  color: #0E1116;
+  margin-bottom: 1.5rem;
+}
+
+.account-container form {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+
+.account-container form input[type="email"],
+.account-container form input[type="text"],
+.account-container form input[type="password"] {
+    padding: 10px;
+    margin-bottom: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.account-container form button {
+  padding: 10px;
+  margin-top: 0.5rem;
+  background-color: #0E1116;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.account-container form button:hover {
+  background-color: #333;
+}
+
+.account-container .back-link {
+  display: block;
+  margin-top: 1rem;
+  color: #0E1116;
+  text-decoration: none;
+}
+
+.account-container .back-link:hover {
+  text-decoration: underline;
+}
+
+/* Splash Styling */
+.welcome-container {
+  margin: 0 auto;
+  padding: 2rem;
+  text-align: center;
+}
+
+header {
+  padding-bottom: 2rem;
+  border-bottom: 1px solid #ccc;
+}
+
+header h1 {
+  color: #0E1116;
+  font-size: 2.5rem;
+}
+
+header p {
+  font-size: 1.2rem;
+  color: #333;
+}
+
+.button-container {
+  margin-top: 2rem;
+}
+
+.button-container button {
+  width: 200px;
+  font-size: 1.1rem;
+  margin: 0.5rem;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.button-container button:hover {
+  background-color: #0E1116;
+  color: #FFFFFF;
+}
+
 /* Main Content Styling*/
   main {
     display: flex;
@@ -75,7 +173,6 @@ body, html {
     margin-left: 1rem;
   }
   
-  /*TEMPORARY STYLING LEIA CAN EDIT TO LOOK PRETTY :) */
   /* Modal styling */
   .modal {
     display: none; /* Hidden by default */
@@ -109,7 +206,7 @@ body, html {
 
   .close-button:hover,
   .close-button:focus {
-    color: rgb(153, 10, 10);
+    color: #0E1116;
     text-decoration: none;
     cursor: pointer;
   }
@@ -130,7 +227,7 @@ body, html {
 
   #addHabitForm button {
     padding: 10px;
-    background-color: #5c5c5c;
+    background-color: #0E1116;
     color: white;
     border: none;
     border-radius: 4px;
@@ -146,7 +243,7 @@ body, html {
     padding: 0.5rem 1rem;
     margin-bottom: 0.5rem;
     border: none;
-    background: #d1c4c4;
+    background: #FDDAD8;
     color: #333;
     border-radius: 4px;
     cursor: pointer;
@@ -155,16 +252,17 @@ body, html {
   /* Footer Styling */
   footer {
     padding: 1rem;
-    background: #fff0f0;
+    background: #FDDAD8;
     text-align: center;
     box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1);
   }
+
 
   /* Dropdown Styling */
   .dropdown-content{
     display: none;
     position: absolute;
-    background-color:  #ffffff;
+    background-color:  #f9f9f9;
     min-width: 160px;
     box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
     right: 0; 
@@ -191,7 +289,7 @@ body, html {
 
   /* Dropdown Button Styling */
 .dropbtn {
-  background-color: #fff0f0;
+  background-color: #FDDAD8;
   color: #333;
   padding: 16px;
   font-size: 16px;
@@ -249,15 +347,6 @@ body, html {
 }
 
 
-/*Design for chart container in habit stats*/
-.chart-container {
-  width: 80%; 
-  margin: auto; /* Center the chart */
-  padding-top: 50px; /* Space from the navbar */
-}
-
-
-
 /* Responsive Design for Multiple Devices or Screensizes!! */
 
 /* Typical Tablet Screen*/
@@ -310,11 +399,3 @@ body, html {
    }
 }
   
-/* If habit-check button is checked, display a checkmark */
-.habit-check.checked {
-  /* Ensures the checkmark is centered within the square */
-  background-image: url('checkmark.png');
-  background-size: contain;
-  background-repeat: no-repeat;
-  background-position: center left;
-}
