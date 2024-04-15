@@ -201,7 +201,7 @@ app.post('/api/habits', async (req, res) => {
     try {
         habit = validateHabit(habit);
     } catch (e) {
-        res.send(400).send(e);
+        res.status(400).send(e);
         return;
     }
     await client.db('habitue').collection('habits').insertOne(habit);
@@ -214,7 +214,7 @@ app.put('/api/habits/:id', async (req, res) => {
     try {
         habit = validateHabit(habit);
     } catch (e) {
-        res.send(400).send(e);
+        res.status(400).send(e);
         return;
     }
     await client.db('habitue').collection('habits').updateOne({"_id": new ObjectId(req.params.id)}, {$set: habit});
