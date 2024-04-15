@@ -114,17 +114,17 @@ app.get('/api/users/:id', async (req, res) => {
     res.send(user);
 });
 
-// app.post('/api/users', async (req, res) => {
-//     var user = req.body;
-//     try {
-//         user = validateUser(user);
-//     } catch (e) {
-//         res.status(400).send(e);
-//         return;
-//     }
-//     await client.db('habitue').collection('users').insertOne(user);
-//     res.send(user);
-// });
+app.post('/api/users', async (req, res) => {
+    var user = req.body;
+     try {
+        user = validateUser(user);
+    } catch (e) {
+         res.status(400).send(e);
+         return;
+     }
+     await client.db('habitue').collection('users').insertOne(user);
+     res.send(user);
+ });
 
 app.post('/api/habits', async (req, res) => {
     let habit = req.body;
@@ -208,6 +208,8 @@ app.post('/api/habits', async (req, res) => {
     await client.db('habitue').collection('users').updateOne({"_id": new ObjectId(habit.userId)}, {$push: {habits: habit._id}});
     res.send(habit);
 });
+
+
 
 app.put('/api/habits/:id', async (req, res) => {
     const habit = req.body;
