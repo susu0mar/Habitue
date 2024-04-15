@@ -63,6 +63,33 @@ function validateUser(user) {
     return user;
 }
 
+function validateHabit(habit) {
+    if (!habit.userId)
+        throw 'User ID is required';
+    if (!habit.name)
+        throw 'Habit name is required';
+    if (!habit.description)
+        habit.description = '';
+    if (!habit.dueDate)
+        throw 'Due date is required';
+    if (!habit.completed)
+        habit.completed = false;
+    if (!habit.notifications)
+        habit.notifications = [];
+    return habit;
+}
+
+function validateNotification(notif) {
+    if (!notif.habitId)
+        throw 'Habit ID is required';
+    if (!notif.message)
+        throw 'Message is required';
+    if (!notif.date)
+        throw 'Date is required';
+    if (!notif.read)
+        notif.read = false;
+    return notif;
+}
 
 client.connect().then(() => {
     app.listen(api_port, () => {
@@ -157,12 +184,25 @@ app.get('/api/habits/:id', async (req, res) => {
 
 app.post('/api/habits', async (req, res) => {
     const habit = req.body;
+    try {
+        habit = validateHabit(habit);
+    } catch (e) {
+        res.send(400).send(e);
+        return;
+    }
     await client.db('habitue').collection('habits').insertOne(habit);
+    await client.db('habitue').collection('users').updateOne({"_id": new ObjectId(habit.userId)}, {$push: {habits: habit._id}});
     res.send(habit);
 });
 
 app.put('/api/habits/:id', async (req, res) => {
     const habit = req.body;
+    try {
+        habit = validateHabit(habit);
+    } catch (e) {
+        res.send(400).send(e);
+        return;
+    }
     await client.db('habitue').collection('habits').updateOne({"_id": new ObjectId(req.params.id)}, {$set: habit});
     res.send(habit);
 });
@@ -195,6 +235,13 @@ app.get('/api/users/:id/habits', async (req, res) => {
 
 app.put('/api/users/:id/habits', async (req, res) => {
     const user = await client.db('habitue').collection('users').findOne({"_id": new ObjectId(req.params.id)});
+    var habit = req.body;
+    try {
+        habit = validateHabit(habit);
+    } catch (e) {
+        res.status(400).send(e);
+        return;
+    }
     user.habits.push(req.body.id);
     await client.db('habitue').collection('users').updateOne({"_id": new ObjectId(req.params.id)}, {$set: user});
     res.send(user);
