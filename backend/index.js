@@ -270,10 +270,24 @@ app.put('/api/users/:id/habits', async (req, res) => {
 });
 
 app.delete('/api/users/:id/habits/:habitId', async (req, res) => {
-    const user = await client.db('habitue').collection('users').findOne({"_id": new ObjectId(req.params.id)});
-    user.habits = user.habits.filter(habit => habit !== req.params.habitId);
-    await client.db('habitue').collection('users').updateOne({"_id": new ObjectId(req.params.id)}, {$set: user});
-    res.send(user);
+    const userId = new ObjectId(req.params.id);
+    const habitId = new ObjectId(req.params.habitId);
+
+    try {
+        const user = await client.db('habitue').collection('users').findOne({"_id": userId});
+        if (!user) {
+            return res.status(404).send('User not found');
+        }
+
+        const updatedHabits = user.habits.filter(habit => habit.toString() !== habitId.toString());
+
+        await client.db('habitue').collection('users').updateOne({"_id": userId}, {$set: {habits: updatedHabits}});
+        await client.db('habitue').collection('habits').deleteOne({"_id": habitId});
+
+        res.send({ message: 'Habit deleted', habits: updatedHabits });
+    } catch (error) {
+        res.status(500).send(error.toString());
+    }
 });
 
 /** 
@@ -370,4 +384,8 @@ app.get('/favicon.ico', (req, res) => {
 
 app.get('/checkmark.png', (req, res) => {
     res.sendFile(path.join(__dirname, '../', 'checkmark.png'))
+});
+
+app.get('/manageHabits.js', (req, res) => {
+    res.sendFile(path.join(__dirname, '../', 'manageHabits.js'))
 });

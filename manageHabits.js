@@ -39,6 +39,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Create a habit element
     var habitElement = document.createElement('div');
     habitElement.className = 'habit';
+    habitElement.setAttribute('data-habit-id', habitData._id);
   
     // Create a div for habit info and add habit name
     var habitInfo = document.createElement('div');
@@ -58,17 +59,18 @@ document.addEventListener('DOMContentLoaded', function() {
     // Add trash icon for deleting habit
     var trashIcon = document.createElement('span');
     trashIcon.className = 'trash-icon';
-    trashIcon.innerHTML = '🗑️'; 
+    trashIcon.innerHTML = ' 🗑️'; 
     habitDetails.appendChild(trashIcon);
   
     // Add event listener for deleting habit
     trashIcon.addEventListener('click', function(event) {
       const habitName = habitData.name; 
+      const habitID = habitData._id
 
       // Ask user to confirm that they want to delete the habit before calling the remove habit function
       const isConfirmed = confirm(`Are you sure you want to delete the habit "${habitName}"?`);
       if (isConfirmed) {
-        removeHabitDB(habitName);
+        removeHabitDB(habitName, habitID);
       }
     });
   
@@ -79,9 +81,9 @@ document.addEventListener('DOMContentLoaded', function() {
   }
   
   // Remove selected habit from list and update database
-  async function removeHabitDB(habitName) {
+  async function removeHabitDB(habitName, habitId) {
     const userId = sessionStorage.getItem('userId');
-    const response = await fetch(`http://localhost:8080/api/users/${userId}/habits?name=${habitName}`, {
+    const response = await fetch(`http://localhost:8080/api/users/${userId}/habits/${habitId}`, {
       method: 'DELETE'
     });
   

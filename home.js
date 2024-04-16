@@ -273,7 +273,17 @@ function toggleFilterDropdown() {
   document.getElementById("filterDropdown").classList.toggle("show");
 }
 
+
+
 // Function for actual filtering by due date
+
+function sortByDueDate(habits, order) {
+  return habits.sort((a, b) => {
+    let dateA = new Date(a.dueDate), dateB = new Date(b.dueDate);
+    return order === 'ascending' ? dateA - dateB : dateB - dateA;
+  });
+}
+
   async function filterHabits(order) {
   console.log('Filtering habits:', order);
 
@@ -284,12 +294,12 @@ function toggleFilterDropdown() {
   }
 
   try {
-    const response = await fetch(`http://localhost:8080/api/users/${userId}/habits?sort=${order}`);
+    const response = await fetch(`http://localhost:8080/api/users/${userId}/habits`);
     if (!response.ok) {
       throw new Error('Failed to fetch sorted habits');
     }
-    const sortedHabits = await response.json();
-    habitArray = sortedHabits; // Update local habit array with the sorted data
+    const unsortedHabits = await response.json();
+    habitArray = sortByDueDate(unsortedHabits, order); // Update local habit array with the sorted data
 
     allowDisplayUpdate = false //make sure it doesn't reload the page (which would reset the filter)
     displayHabitsfromArray(habitArray);
