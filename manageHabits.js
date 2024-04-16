@@ -14,7 +14,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   
     try {
-      const response = await fetch(`http://localhost:5000/api/users/${userId}/habits`, {headers:{'Cache-Control': 'no-cache'}});
+      const response = await fetch(`http://localhost:8080/api/users/${userId}/habits`, {headers:{'Cache-Control': 'no-cache'}});
       if (!response.ok) {
         throw new Error('Failed to fetch habits');
       }
@@ -81,7 +81,7 @@ document.addEventListener('DOMContentLoaded', function() {
   // Remove selected habit from list and update database
   async function removeHabitDB(habitName) {
     const userId = sessionStorage.getItem('userId');
-    const response = await fetch(`http://localhost:5000/api/users/${userId}/habits?name=${habitName}`, {
+    const response = await fetch(`http://localhost:8080/api/users/${userId}/habits?name=${habitName}`, {
       method: 'DELETE'
     });
   

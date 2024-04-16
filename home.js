@@ -116,7 +116,7 @@ async function addHabitDB(habitName, dueDate, priority, repeatCycle){
 async function sendHabitToBackend(habitData){
 
   try {
-    const response = await fetch('http://localhost:5000/api/habits', {
+    const response = await fetch('http://localhost:8080/api/habits', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -152,7 +152,7 @@ async function updateHabitDisplay(){
 
     try {
         console.log("getting habits to update display")
-        const response = await fetch(`http://localhost:5000/api/users/${userId}/habits`, {headers:{'Cache-Control': 'no-cache'}});
+        const response = await fetch(`http://localhost:8080/api/users/${userId}/habits`, {headers:{'Cache-Control': 'no-cache'}});
         if (!response.ok) {
             throw new Error('Failed to fetch habits');
         }
@@ -185,12 +185,12 @@ async function updateHabitDisplay(){
     // If the button is already 'checked' and clicked again, then its not 'checked' 
     button.addEventListener('click', async function () {
       button.classList.toggle('checked');
-      const habitId = button.parentElement.dataset.habitId;
+      const habitId = this.parentElement.getAttribute('data-habit-id'); // Make sure this is retrieving the correct ID
       const completed = button.classList.contains('checked');
 
       try {
         // Send a PUT request to update habit completion status
-        const response = await fetch(`http://localhost:5000/api/users/${userId}/habits/${habitId}/completed`, {
+        const response = await fetch(`http://localhost:8080/api/habits/${habitId}/completed`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json'
@@ -229,6 +229,7 @@ function createHabitElement(habitData ){ //habitData is from database
   // Create a habit element
   var habitElement = document.createElement('div');
   habitElement.className = 'habit';
+  habitElement.setAttribute('data-habit-id', habitData._id);
 
   // Create a checkbox for the habit element
   var checkBox = document.createElement('span');
@@ -283,7 +284,7 @@ function toggleFilterDropdown() {
   }
 
   try {
-    const response = await fetch(`http://localhost:5000/api/users/${userId}/habits?sort=${order}`);
+    const response = await fetch(`http://localhost:8080/api/users/${userId}/habits?sort=${order}`);
     if (!response.ok) {
       throw new Error('Failed to fetch sorted habits');
     }

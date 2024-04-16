@@ -130,13 +130,19 @@ app.post('/api/habits', async (req, res) => {
     let habit = req.body;
     try {
         habit = validateHabit(habit);
+        const insertResult = await client.db('habitue').collection('habits').insertOne(habit);
+        const userUpdateResult = await client.db('habitue').collection('users').updateOne(
+            {"_id": new ObjectId(habit.userId)},
+            {$push: {habits: insertResult.insertedId}}
+        );
+        if (userUpdateResult.matchedCount === 0) {
+            throw new Error("User not found");
+        }
+        res.send(habit);
     } catch (e) {
-        res.status(400).send(e.toString()); //convert Error to string if necessary
-        return;
+        console.error("Failed to add habit:", e);
+        res.status(400).send(e.toString());
     }
-    const insertResult = await client.db('habitue').collection('habits').insertOne(habit);
-    await client.db('habitue').collection('users').updateOne({"_id": new ObjectId(habit.userId)}, {$push: {habits: insertResult.insertedId}});
-    res.send(habit);
 });
 
 
