@@ -164,6 +164,13 @@ header p {
     font-size: 0.8em; 
   }
 
+  .habit-check.checked {
+    background-image: url(checkmark.png);
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center left;
+  }
+
   .filter-container{
     position: relative;
     display: inline-block;
