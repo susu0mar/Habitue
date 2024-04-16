@@ -153,6 +153,15 @@ header p {
     cursor: pointer;
     margin-right: 0.5rem;
   }
+
+  /* If habit-check button is checked, display a checkmark */
+  .habit-check.checked {
+    /* Ensures the checkmark is centered within the square */
+    background-image: url('checkmark.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center left;
+  }
   
   .habit-info {
     border-bottom: 1px solid #ccc;
