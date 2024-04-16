@@ -367,3 +367,7 @@ app.get('/Habitue_transparent.png', (req, res) => {
 app.get('/favicon.ico', (req, res) => {
     res.sendFile(path.join(__dirname, '../', 'favicon.ico'))
 });
+
+app.get('/checkmark.png', (req, res) => {
+    res.sendFile(path.join(__dirname, '../', 'checkmark.png'))
+});
